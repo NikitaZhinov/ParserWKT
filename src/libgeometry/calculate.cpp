@@ -1,5 +1,65 @@
 #include <parser.hpp>
 
+float Calculate::calculate_triangle_perimeter(Triangle obj)
+{
+    float a = std::sqrt(
+            (obj.points[0].x - obj.points[1].x)
+                    * (obj.points[0].x - obj.points[1].x)
+            + (obj.points[0].y - obj.points[1].y)
+                    * (obj.points[0].y - obj.points[1].y));
+    float b = std::sqrt(
+            (obj.points[1].x - obj.points[2].x)
+                    * (obj.points[1].x - obj.points[2].x)
+            + (obj.points[1].y - obj.points[2].y)
+                    * (obj.points[1].y - obj.points[2].y));
+    float c = std::sqrt(
+            (obj.points[2].x - obj.points[0].x)
+                    * (obj.points[2].x - obj.points[0].x)
+            + (obj.points[2].y - obj.points[0].y)
+                    * (obj.points[2].y - obj.points[0].y));
+    return a + b + c;
+}
+
+float Calculate::calculate_triangle_area(Triangle obj)
+{
+    float a = std::sqrt(
+            (obj.points[0].x - obj.points[1].x)
+                    * (obj.points[0].x - obj.points[1].x)
+            + (obj.points[0].y - obj.points[1].y)
+                    * (obj.points[0].y - obj.points[1].y));
+    float b = std::sqrt(
+            (obj.points[1].x - obj.points[2].x)
+                    * (obj.points[1].x - obj.points[2].x)
+            + (obj.points[1].y - obj.points[2].y)
+                    * (obj.points[1].y - obj.points[2].y));
+    float c = std::sqrt(
+            (obj.points[2].x - obj.points[0].x)
+                    * (obj.points[2].x - obj.points[0].x)
+            + (obj.points[2].y - obj.points[0].y)
+                    * (obj.points[2].y - obj.points[0].y));
+    float perimeter = a + b + c;
+    float p = perimeter / 2.;
+    return std::sqrt(p * (p - a) * (p - b) * (p - c));
+}
+
+float Calculate::calculate_poligon_area(Polygon obj)
+{
+    float area = 0;
+    for (size_t i = 0; i < obj.points.size(); i++) {
+        float y1, y2;
+        if (i + 1 >= obj.points.size())
+            y1 = obj.points[0].y;
+        else
+            y1 = obj.points[i + 1].y;
+        if ((long long)i - 1 < 0)
+            y2 = obj.points.back().y;
+        else
+            y2 = obj.points[i - 1].y;
+        area += obj.points[i].x * (y1 - y2);
+    }
+    return std::abs(area) / 2.;
+}
+
 void Calculate::print_objects()
 {
     int triangle_number = 0;
@@ -50,18 +110,8 @@ void Calculate::print_triangle(int i, int triangle_number)
 {
     auto line = order_of_lines[i];
     Triangle obj = triangles[triangle_number];
-    float a = std::sqrt(
-            std::pow(obj.points[0].x - obj.points[1].x, 2)
-            + std::pow(obj.points[0].y - obj.points[1].y, 2));
-    float b = std::sqrt(
-            std::pow(obj.points[1].x - obj.points[2].x, 2)
-            + std::pow(obj.points[1].y - obj.points[2].y, 2));
-    float c = std::sqrt(
-            std::pow(obj.points[2].x - obj.points[0].x, 2)
-            + std::pow(obj.points[2].y - obj.points[0].y, 2));
-    float perimeter = a + b + c;
-    float p = perimeter / 2.;
-    float area = std::sqrt(p * (p - a) * (p - b) * (p - c));
+    float perimeter = calculate_triangle_perimeter(obj);
+    float area = calculate_triangle_area(obj);
     std::cout << i + 1 << ". " << line << "\n\tperimeter = " << perimeter
               << "\n\tarea = " << area << '\n'
               << std::endl;
@@ -83,7 +133,18 @@ void Calculate::print_polygon(int i, int polygon_number)
     auto line = order_of_lines[i];
     Polygon obj = polygons[polygon_number];
     float perimeter = 0;
-    float area = 0;
+    for (size_t i = 0; i < obj.points.size() - 1; i++)
+        perimeter += std::sqrt(
+                (obj.points[i].x - obj.points[i + 1].x)
+                        * (obj.points[i].x - obj.points[i + 1].x)
+                + (obj.points[i].y - obj.points[i + 1].y)
+                        * (obj.points[i].y - obj.points[i + 1].y));
+    perimeter += std::sqrt(
+            (obj.points.back().x - obj.points[0].x)
+                    * (obj.points.back().x - obj.points[0].x)
+            + (obj.points.back().y - obj.points[0].y)
+                    * (obj.points.back().y - obj.points[0].y));
+    float area = calculate_poligon_area(obj);
     std::cout << i + 1 << ". " << line << "\n\tperimeter = " << perimeter
               << "\n\tarea = " << area << '\n'
               << std::endl;

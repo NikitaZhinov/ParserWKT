@@ -18,6 +18,10 @@ private:
     std::vector<int> order_of_objects;
     std::vector<std::string> order_of_lines;
 
+    float calculate_triangle_perimeter(Triangle obj);
+    float calculate_triangle_area(Triangle obj);
+    float calculate_poligon_area(Polygon obj);
+
     void print_triangle(int i, int triangle_number);
     void print_circle(int i, int circle_number);
     void print_polygon(int i, int polygon_number);
