@@ -9,7 +9,7 @@ void Parser::parsing(
                                                    : symbol;
     int col = 0;
 
-    if (command.compare(TIANGLE) == 0)
+    if (command.compare(TRIANGLE) == 0)
         parsing_triangle(calc, tokens, line, col);
     else if (command.compare(CIRCLE) == 0)
         parsing_circle(calc, tokens, line, col);
@@ -79,6 +79,7 @@ void Parser::parsing_triangle(
                 if (tokens[i + 1].compare(".") != 0) {
                     axis++;
                     float_part = false;
+                    multiplier = 1;
                 }
                 triangle.points[point_number].x += number;
             } else
@@ -148,6 +149,7 @@ void Parser::parsing_circle(
                     if (tokens[i + 1].compare(".") != 0) {
                         float_part = false;
                         axis++;
+                        multiplier = 1;
                     }
                     circle.point.x += number;
                 } else
@@ -218,6 +220,7 @@ void Parser::parsing_polygon(
                 if (tokens[i + 1].compare(".") != 0) {
                     float_part = false;
                     axis++;
+                    multiplier = 1;
                 }
                 polygon.points[point_number].x += number;
             } else

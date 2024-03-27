@@ -1,4 +1,4 @@
-CC = g++ -g -Wall -Werror
+CC = g++ -g -Wall
 LIBS = -lm
 LIB = libgeometry.a
 LIB_PATH = ./bin/
@@ -14,7 +14,9 @@ OBJ = $(patsubst $(SRC_PATH)%.cpp, $(OBJ_PATH)%.o, $(SRC))
 SRC_LIB = $(wildcard $(SRC_LIB_PATH)*.cpp)
 OBJ_LIB = $(patsubst $(SRC_LIB_PATH)%.cpp, $(OBJ_PATH)%.o, $(SRC_LIB))
 
-$(TARGET) : $(LIB) $(OBJ)
+all : $(TARGET)
+
+$(TARGET) : check $(OBJ) $(LIB)
 	$(CC) $(OBJ) -I$(INCLUDE_PATH) $(LIB_PATH)$(LIB) -o $(TARGET_PATH)$(TARGET) $(LIBS)
 
 $(LIB) : $(OBJ_LIB)
@@ -30,3 +32,7 @@ $(OBJ_PATH)%.o : $(SRC_LIB_PATH)%.cpp
 	
 $(OBJ_PATH)%.o : $(SRC_PATH)%.cpp
 	$(CC) -I$(INCLUDE_PATH) -c $< -o $@
+
+check :
+	if [ ! -d "$(OBJ_PATH)" ]; then mkdir $(OBJ_PATH); fi
+	if [ ! -d "$(TARGET_PATH)" ]; then mkdir $(TARGET_PATH); fi

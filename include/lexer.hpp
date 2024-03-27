@@ -1,5 +1,4 @@
-#ifndef _LEXER
-#define _LEXER
+#pragma once
 
 #include <geometry.hpp>
 
@@ -30,5 +29,3 @@ private:
                                                            // неопределённых
                                                            // символах
 };
-
-#endif // _LEXER

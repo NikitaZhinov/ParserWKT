@@ -1,33 +1,8 @@
-#ifndef _PARSER
-#define _PARSER
+#pragma once
 
 #include <geometry.hpp>
 
-class Calculate {
-public:
-    void print_objects();
-
-    void add_triangle(std::string& line, Triangle& triangle, int object_number);
-    void add_circle(std::string& line, Circle& circle, int object_number);
-    void add_polygon(std::string& line, Polygon& polygon, int object_number);
-
-private:
-    std::vector<Triangle> triangles;
-    std::vector<Circle> circles;
-    std::vector<Polygon> polygons;
-    std::vector<int> order_of_objects;
-    std::vector<std::string> order_of_lines;
-
-    float calculate_triangle_perimeter(Triangle obj);
-    float calculate_triangle_area(Triangle obj);
-    float calculate_poligon_area(Polygon obj);
-
-    void print_triangle(int i, int triangle_number);
-    void print_circle(int i, int circle_number);
-    void print_polygon(int i, int polygon_number);
-};
-
-#define TIANGLE "triangle"
+#define TRIANGLE "triangle"
 #define CIRCLE "circle"
 #define POLYGON "polygon"
 
@@ -48,7 +23,7 @@ private:
     Circle circle;
     Polygon polygon;
 
-    int number_object = OBJECT_NOT_DEFINED;
+    size_t number_object = OBJECT_NOT_DEFINED;
 
     void parsing_triangle(
             Calculate& calc,
@@ -89,5 +64,3 @@ private:
                                                         // лишнего
                                                         // токена
 };
-
-#endif // _PARSER
