@@ -148,6 +148,7 @@ bool Calculate::vertical_with_line(Point p11, Point p12, Point p21, Point p22)
         and y >= std::min(p21.y, p22.y) and y <= std::max(p21.y, p22.y)
         and y >= std::min(p11.y, p12.y) and y <= std::max(p11.y, p12.y))
         return true;
+    return false;
 }
 
 bool Calculate::is_intersect_triangle_with_triangle(
