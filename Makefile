@@ -1,4 +1,4 @@
-CC = g++ -g -Wall
+CC = g++ -g -Wall -Werror
 LIBS = -lm
 LIB = libgeometry.a
 LIB_PATH = ./bin/
