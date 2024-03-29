@@ -1,4 +1,4 @@
-#include <geometry.hpp>
+#include <geometry.hpp> // без него не компилиться
 
 float Calculate::get_distance(Point p1, Point p2)
 {
@@ -23,7 +23,34 @@ float Calculate::calculate_triangle_area(Triangle obj)
     return std::sqrt(p * (p - a) * (p - b) * (p - c));
 }
 
-float Calculate::calculate_poligon_area(Polygon obj)
+float Calculate::calculate_circle_perimeter(Circle obj)
+{
+    return 2. * M_PI * obj.radius;
+}
+
+float Calculate::calculate_circle_area(Circle obj)
+{
+    return M_PI * obj.radius * obj.radius;
+}
+
+float Calculate::calculate_polygon_perimeter(Polygon obj)
+{
+    float perimeter = 0;
+    for (size_t i = 0; i < obj.points.size() - 1; i++)
+        perimeter += std::sqrt(
+                (obj.points[i].x - obj.points[i + 1].x)
+                        * (obj.points[i].x - obj.points[i + 1].x)
+                + (obj.points[i].y - obj.points[i + 1].y)
+                        * (obj.points[i].y - obj.points[i + 1].y));
+    perimeter += std::sqrt(
+            (obj.points.back().x - obj.points[0].x)
+                    * (obj.points.back().x - obj.points[0].x)
+            + (obj.points.back().y - obj.points[0].y)
+                    * (obj.points.back().y - obj.points[0].y));
+    return perimeter;
+}
+
+float Calculate::calculate_polygon_area(Polygon obj)
 {
     float area = 0;
     for (size_t i = 0; i < obj.points.size(); i++) {
@@ -180,7 +207,7 @@ bool Calculate::is_intersect_triangle_with_circle(Triangle obj1, Circle obj2)
     return false;
 }
 
-bool Calculate::is_intersect_triangle_with_poligon(Triangle obj1, Polygon obj2)
+bool Calculate::is_intersect_triangle_with_polygon(Triangle obj1, Polygon obj2)
 {
     for (size_t i = 0; i < 3; i++) {
         size_t ii = i + 1 == 3 ? 0 : i + 1;
@@ -208,7 +235,7 @@ bool Calculate::is_intersect_circle_with_circle(Circle obj1, Circle obj2)
     return true;
 }
 
-bool Calculate::is_intersect_circle_with_poligon(Circle obj1, Polygon obj2)
+bool Calculate::is_intersect_circle_with_polygon(Circle obj1, Polygon obj2)
 {
     for (size_t i = 0; i < obj2.points.size(); i++) {
         size_t ii = i + 1 == obj2.points.size() ? 0 : i + 1;
@@ -242,7 +269,7 @@ bool Calculate::is_intersect_circle_with_poligon(Circle obj1, Polygon obj2)
     return false;
 }
 
-bool Calculate::is_intersect_poligon_with_poligon(Polygon obj1, Polygon obj2)
+bool Calculate::is_intersect_polygon_with_polygon(Polygon obj1, Polygon obj2)
 {
     for (size_t i = 0; i < obj1.points.size(); i++) {
         size_t ii = i + 1 == obj1.points.size() ? 0 : i + 1;
@@ -308,7 +335,7 @@ void Calculate::print_triangle(size_t i, size_t triangle_number)
                 circle_number++;
             } else if (
                     order_of_objects[j] == POLYGON_NUMBER
-                    and is_intersect_triangle_with_poligon(
+                    and is_intersect_triangle_with_polygon(
                             obj, polygons[polygon_number])) {
                 std::cout << "\t\t" << j + 1 << ": polygon" << std::endl;
                 polygon_number++;
@@ -322,8 +349,8 @@ void Calculate::print_circle(size_t i, size_t circle_number)
 {
     auto line = order_of_lines[i];
     Circle obj = circles[circle_number];
-    float perimeter = 2. * M_PI * obj.radius;
-    float area = M_PI * obj.radius * obj.radius;
+    float perimeter = calculate_circle_perimeter(obj);
+    float area = calculate_circle_area(obj);
     std::cout << i + 1 << ". " << line << "\n\tperimeter = " << perimeter
               << "\n\tarea = " << area << "\n\tintersects:" << std::endl;
     size_t triangle_number = 0;
@@ -346,7 +373,7 @@ void Calculate::print_circle(size_t i, size_t circle_number)
                 circle_number2++;
             } else if (
                     order_of_objects[j] == POLYGON_NUMBER
-                    and is_intersect_circle_with_poligon(
+                    and is_intersect_circle_with_polygon(
                             obj, polygons[polygon_number])) {
                 std::cout << "\t\t" << j + 1 << ": polygon" << std::endl;
                 polygon_number++;
@@ -360,19 +387,8 @@ void Calculate::print_polygon(size_t i, size_t polygon_number)
 {
     auto line = order_of_lines[i];
     Polygon obj = polygons[polygon_number];
-    float perimeter = 0;
-    for (size_t i = 0; i < obj.points.size() - 1; i++)
-        perimeter += std::sqrt(
-                (obj.points[i].x - obj.points[i + 1].x)
-                        * (obj.points[i].x - obj.points[i + 1].x)
-                + (obj.points[i].y - obj.points[i + 1].y)
-                        * (obj.points[i].y - obj.points[i + 1].y));
-    perimeter += std::sqrt(
-            (obj.points.back().x - obj.points[0].x)
-                    * (obj.points.back().x - obj.points[0].x)
-            + (obj.points.back().y - obj.points[0].y)
-                    * (obj.points.back().y - obj.points[0].y));
-    float area = calculate_poligon_area(obj);
+    float perimeter = calculate_polygon_perimeter(obj);
+    float area = calculate_polygon_area(obj);
     std::cout << i + 1 << ". " << line << "\n\tperimeter = " << perimeter
               << "\n\tarea = " << area << "\n\tintersects:" << std::endl;
     size_t triangle_number = 0;
@@ -383,19 +399,19 @@ void Calculate::print_polygon(size_t i, size_t polygon_number)
             polygon_number2++;
         if (j != i) {
             if (order_of_objects[j] == TRIANGLE_NUMBER
-                and is_intersect_triangle_with_poligon(
+                and is_intersect_triangle_with_polygon(
                         triangles[triangle_number], obj)) {
                 std::cout << "\t\t" << j + 1 << ": triangle" << std::endl;
                 triangle_number++;
             } else if (
                     order_of_objects[j] == CIRCLE_NUMBER
-                    and is_intersect_circle_with_poligon(
+                    and is_intersect_circle_with_polygon(
                             circles[circle_number], obj)) {
                 std::cout << "\t\t" << j + 1 << ": circle" << std::endl;
                 circle_number++;
             } else if (
                     order_of_objects[j] == POLYGON_NUMBER
-                    and is_intersect_poligon_with_poligon(
+                    and is_intersect_polygon_with_polygon(
                             obj, polygons[polygon_number2])) {
                 std::cout << "\t\t" << j + 1 << ": polygon" << std::endl;
                 polygon_number2++;
@@ -403,4 +419,19 @@ void Calculate::print_polygon(size_t i, size_t polygon_number)
         }
     }
     std::cout << std::endl;
+}
+
+std::vector<Triangle>& Calculate::get_triangles()
+{
+    return triangles;
+}
+
+std::vector<Circle>& Calculate::get_circles()
+{
+    return circles;
+}
+
+std::vector<Polygon>& Calculate::get_polygons()
+{
+    return polygons;
 }

@@ -16,6 +16,7 @@ default:
 stages:
   - check-codestyle
   - build
+  - test
 
 checkstyle:
   stage: check-codestyle
@@ -24,3 +25,9 @@ checkstyle:
 build:
   stage: build
   extends: .build-script
+
+test:
+  script:
+    - echo "START TESTS"
+    - make run-test
+    - echo "FINISH TESTS"

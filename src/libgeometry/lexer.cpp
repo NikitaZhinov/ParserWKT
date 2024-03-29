@@ -2,6 +2,7 @@
 
 void Lexer::create_tokens(std::string& line) // создание массива токенов
 {
+    tokens.clear();
     for (int col = 0; (size_t)col < line.length();
          col++) { // проходимся по каждому символу
         char symbol = line[col];
