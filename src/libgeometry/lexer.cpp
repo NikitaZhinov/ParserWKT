@@ -52,7 +52,10 @@ void Lexer::add_spec_symbol(char symbol) // добавление
     tokens.push_back(token);
 }
 
-void Lexer::print_invalid_symbol(std::string& line, int col)
+void Lexer::print_invalid_symbol(std::string& line, int col) // вывод
+                                                             // ошибки при
+                                                             // неопределённых
+                                                             // символах
 {
     std::cout << line << '\n'
               << std::setw(col + 1) << '^' << "\nInvalid symbol" << std::endl;

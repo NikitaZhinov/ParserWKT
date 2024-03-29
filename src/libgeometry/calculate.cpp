@@ -1,19 +1,22 @@
 #include <geometry.hpp> // без него не компилиться
 
-float Calculate::get_distance(Point p1, Point p2)
+float Calculate::get_distance(
+        Point p1, Point p2) // получить дистанцию между двумя точками
 {
     return std::sqrt(
             (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
-float Calculate::calculate_triangle_perimeter(Triangle obj)
+float Calculate::calculate_triangle_perimeter(
+        Triangle obj) // вычислить периметер треугольника
 {
     return get_distance(obj.points[0], obj.points[1])
             + get_distance(obj.points[1], obj.points[2])
             + get_distance(obj.points[2], obj.points[0]);
 }
 
-float Calculate::calculate_triangle_area(Triangle obj)
+float Calculate::calculate_triangle_area(
+        Triangle obj) // вычислить площадь треугольника
 {
     float a = get_distance(obj.points[0], obj.points[1]);
     float b = get_distance(obj.points[1], obj.points[2]);
@@ -23,17 +26,19 @@ float Calculate::calculate_triangle_area(Triangle obj)
     return std::sqrt(p * (p - a) * (p - b) * (p - c));
 }
 
-float Calculate::calculate_circle_perimeter(Circle obj)
+float Calculate::calculate_circle_perimeter(
+        Circle obj) // вычислить периметер круга
 {
     return 2. * M_PI * obj.radius;
 }
 
-float Calculate::calculate_circle_area(Circle obj)
+float Calculate::calculate_circle_area(Circle obj) // вычислить площадь круга
 {
     return M_PI * obj.radius * obj.radius;
 }
 
-float Calculate::calculate_polygon_perimeter(Polygon obj)
+float Calculate::calculate_polygon_perimeter(
+        Polygon obj) // вычислить периметер многоугольника
 {
     float perimeter = 0;
     for (size_t i = 0; i < obj.points.size() - 1; i++)
@@ -50,7 +55,8 @@ float Calculate::calculate_polygon_perimeter(Polygon obj)
     return perimeter;
 }
 
-float Calculate::calculate_polygon_area(Polygon obj)
+float Calculate::calculate_polygon_area(
+        Polygon obj) // вычислить площадь многоугольника
 {
     float area = 0;
     for (size_t i = 0; i < obj.points.size(); i++) {
@@ -68,7 +74,7 @@ float Calculate::calculate_polygon_area(Polygon obj)
     return std::abs(area) / 2.;
 }
 
-void Calculate::print_objects()
+void Calculate::print_objects() // вывод
 {
     size_t triangle_number = 0;
     size_t circle_number = 0;
@@ -92,7 +98,9 @@ void Calculate::print_objects()
 }
 
 void Calculate::add_triangle(
-        std::string& line, Triangle& triangle, size_t object_number)
+        std::string& line,
+        Triangle& triangle,
+        size_t object_number) // добавить треугольник
 {
     this->triangles.push_back(triangle);
     order_of_objects.push_back(object_number);
@@ -100,7 +108,9 @@ void Calculate::add_triangle(
 }
 
 void Calculate::add_circle(
-        std::string& line, Circle& circle, size_t object_number)
+        std::string& line,
+        Circle& circle,
+        size_t object_number) // добавить круг
 {
     this->circles.push_back(circle);
     order_of_objects.push_back(object_number);
@@ -108,14 +118,20 @@ void Calculate::add_circle(
 }
 
 void Calculate::add_polygon(
-        std::string& line, Polygon& polygon, size_t object_number)
+        std::string& line,
+        Polygon& polygon,
+        size_t object_number) // добавить многоугольник
 {
     this->polygons.push_back(polygon);
     order_of_objects.push_back(object_number);
     order_of_lines.push_back(line);
 }
 
-bool Calculate::is_intersect(Point p11, Point p12, Point p21, Point p22)
+bool Calculate::is_intersect(
+        Point p11,
+        Point p12,
+        Point p21,
+        Point p22) // пересекаются ли две прямые
 {
     float dx1 = p11.x - p12.x;
     float dx2 = p21.x - p22.x;
@@ -134,9 +150,9 @@ bool Calculate::is_intersect(Point p11, Point p12, Point p21, Point p22)
                      and std::min(p11.x, p12.x) >= std::min(p21.x, p22.x))))
             return true;
     } else if (dx1 == 0. and dx2 != 0.)
-        return vertical_with_line(p11, p12, p21, p22);
+        return is_intersect_vertical_with_line(p11, p12, p21, p22);
     else if (dx1 != 0. and dx2 == 0.)
-        return vertical_with_line(p21, p22, p11, p12);
+        return is_intersect_vertical_with_line(p21, p22, p11, p12);
     else {
         float k1 = (p11.y - p12.y) / dx1;
         float b1 = p11.y - k1 * p11.x;
@@ -165,7 +181,11 @@ bool Calculate::is_intersect(Point p11, Point p12, Point p21, Point p22)
     return false;
 }
 
-bool Calculate::vertical_with_line(Point p11, Point p12, Point p21, Point p22)
+bool Calculate::is_intersect_vertical_with_line(
+        Point p11,
+        Point p12,
+        Point p21,
+        Point p22) // пересекаются ли вертикальная и диагональная линии
 {
     float k2 = (p21.y - p22.y) / (p21.x - p22.x);
     float b2 = p21.y - k2 * p21.x;
@@ -179,7 +199,8 @@ bool Calculate::vertical_with_line(Point p11, Point p12, Point p21, Point p22)
 }
 
 bool Calculate::is_intersect_triangle_with_triangle(
-        Triangle obj1, Triangle obj2)
+        Triangle obj1,
+        Triangle obj2) // пересекается ли треугольник с другим треугольником
 {
     for (size_t i = 0; i < 3; i++) {
         size_t ii = i + 1 == 3 ? 0 : i + 1;
@@ -196,7 +217,8 @@ bool Calculate::is_intersect_triangle_with_triangle(
     return false;
 }
 
-bool Calculate::is_intersect_triangle_with_circle(Triangle obj1, Circle obj2)
+bool Calculate::is_intersect_triangle_with_circle(
+        Triangle obj1, Circle obj2) // пересекается ли треугольник с кругом
 {
     bool res1 = is_intersect_circle_line(obj2, obj1.points[0], obj1.points[1]);
     bool res2 = is_intersect_circle_line(obj2, obj1.points[1], obj1.points[2]);
@@ -207,7 +229,9 @@ bool Calculate::is_intersect_triangle_with_circle(Triangle obj1, Circle obj2)
     return false;
 }
 
-bool Calculate::is_intersect_triangle_with_polygon(Triangle obj1, Polygon obj2)
+bool Calculate::is_intersect_triangle_with_polygon(
+        Triangle obj1,
+        Polygon obj2) // пересекается ли треугольник с многоугольником
 {
     for (size_t i = 0; i < 3; i++) {
         size_t ii = i + 1 == 3 ? 0 : i + 1;
@@ -225,7 +249,8 @@ bool Calculate::is_intersect_triangle_with_polygon(Triangle obj1, Polygon obj2)
     return false;
 }
 
-bool Calculate::is_intersect_circle_with_circle(Circle obj1, Circle obj2)
+bool Calculate::is_intersect_circle_with_circle(
+        Circle obj1, Circle obj2) // пересекается ли круг с другим кругом
 {
     double d
             = sqrt(pow(obj2.point.x - obj1.point.x, 2)
@@ -235,7 +260,8 @@ bool Calculate::is_intersect_circle_with_circle(Circle obj1, Circle obj2)
     return true;
 }
 
-bool Calculate::is_intersect_circle_with_polygon(Circle obj1, Polygon obj2)
+bool Calculate::is_intersect_circle_with_polygon(
+        Circle obj1, Polygon obj2) // пересекается ли круг с многоугольником
 {
     for (size_t i = 0; i < obj2.points.size(); i++) {
         size_t ii = i + 1 == obj2.points.size() ? 0 : i + 1;
@@ -269,7 +295,9 @@ bool Calculate::is_intersect_circle_with_polygon(Circle obj1, Polygon obj2)
     return false;
 }
 
-bool Calculate::is_intersect_polygon_with_polygon(Polygon obj1, Polygon obj2)
+bool Calculate::is_intersect_polygon_with_polygon(
+        Polygon obj1,
+        Polygon obj2) // пересекается ли многоугольник с другим многоугольником
 {
     for (size_t i = 0; i < obj1.points.size(); i++) {
         size_t ii = i + 1 == obj1.points.size() ? 0 : i + 1;
@@ -286,7 +314,8 @@ bool Calculate::is_intersect_polygon_with_polygon(Polygon obj1, Polygon obj2)
     return false;
 }
 
-bool Calculate::is_intersect_circle_line(Circle circle, Point p1, Point p2)
+bool Calculate::is_intersect_circle_line(
+        Circle circle, Point p1, Point p2) // пересекаются ли круг и линия
 {
     double x01 = p1.x - circle.point.x;
     double y01 = p1.y - circle.point.y;
@@ -307,7 +336,8 @@ bool Calculate::is_intersect_circle_line(Circle circle, Point p1, Point p2)
     return (a + b + c < 0.);
 }
 
-void Calculate::print_triangle(size_t i, size_t triangle_number)
+void Calculate::print_triangle(
+        size_t i, size_t triangle_number) // вывести треугольник
 {
     auto line = order_of_lines[i];
     Triangle obj = triangles[triangle_number];
@@ -319,7 +349,7 @@ void Calculate::print_triangle(size_t i, size_t triangle_number)
     size_t circle_number = 0;
     size_t polygon_number = 0;
     for (size_t j = 0; j < order_of_objects.size(); j++) {
-        if (triangle_number2 == triangle_number)
+        if (triangle_number2 == triangle_number) // если текущий треугольник
             triangle_number2++;
         if (j != i) {
             if (order_of_objects[j] == TRIANGLE_NUMBER
@@ -345,7 +375,7 @@ void Calculate::print_triangle(size_t i, size_t triangle_number)
     std::cout << std::endl;
 }
 
-void Calculate::print_circle(size_t i, size_t circle_number)
+void Calculate::print_circle(size_t i, size_t circle_number) // вывести круг
 {
     auto line = order_of_lines[i];
     Circle obj = circles[circle_number];
@@ -357,7 +387,7 @@ void Calculate::print_circle(size_t i, size_t circle_number)
     size_t circle_number2 = 0;
     size_t polygon_number = 0;
     for (size_t j = 0; j < order_of_objects.size(); j++) {
-        if (circle_number2 == circle_number)
+        if (circle_number2 == circle_number) // если текущий круг
             circle_number2++;
         if (j != i) {
             if (order_of_objects[j] == TRIANGLE_NUMBER
@@ -383,7 +413,8 @@ void Calculate::print_circle(size_t i, size_t circle_number)
     std::cout << std::endl;
 }
 
-void Calculate::print_polygon(size_t i, size_t polygon_number)
+void Calculate::print_polygon(
+        size_t i, size_t polygon_number) // вывести многоугольник
 {
     auto line = order_of_lines[i];
     Polygon obj = polygons[polygon_number];
@@ -395,7 +426,7 @@ void Calculate::print_polygon(size_t i, size_t polygon_number)
     size_t circle_number = 0;
     size_t polygon_number2 = 0;
     for (size_t j = 0; j < order_of_objects.size(); j++) {
-        if (polygon_number2 == polygon_number)
+        if (polygon_number2 == polygon_number) // если текущий многоугольник
             polygon_number2++;
         if (j != i) {
             if (order_of_objects[j] == TRIANGLE_NUMBER
@@ -421,17 +452,17 @@ void Calculate::print_polygon(size_t i, size_t polygon_number)
     std::cout << std::endl;
 }
 
-std::vector<Triangle>& Calculate::get_triangles()
+std::vector<Triangle>& Calculate::get_triangles() // получить все треугольники
 {
     return triangles;
 }
 
-std::vector<Circle>& Calculate::get_circles()
+std::vector<Circle>& Calculate::get_circles() // получить все круги
 {
     return circles;
 }
 
-std::vector<Polygon>& Calculate::get_polygons()
+std::vector<Polygon>& Calculate::get_polygons() // получить все многоугольники
 {
     return polygons;
 }

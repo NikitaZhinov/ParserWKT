@@ -1,25 +1,36 @@
+# COMPILE
 CC = g++ -g -Wall -Werror
-LIBS = -lm
-LIBS_TEST = -l
-LIB = libgeometry.a
+
+# TARGETS
+TARGET = geometry
+TEST_TARGET = tests
+
+# MAIN PATHES
+TARGET_PATH = ./bin/
 LIB_PATH = ./bin/
 INCLUDE_PATH = ./include/
 SRC_PATH = ./src/
 SRC_LIB_PATH = ./src/libgeometry/
-TARGET_PATH = ./bin/
-TARGET = geometry
 OBJ_PATH = ./obj/
 OBJ_SRC = ./obj/src/
 OBJ_LIB_PATH = ./obj/src/libgeometry/
 OBJ_TEST_PATH = ./obj/test/
 TEST_PATH = ./test/
-TEST_TARGET = tests
 THIRDPARTY_PATH = ./thirdparty/
 
+# LIBRARY
+LIBS = -lm
+LIB = libgeometry.a
+
+# SRC FILES
 SRC = $(wildcard $(SRC_PATH)*.cpp)
-OBJ = $(patsubst $(SRC_PATH)%.cpp, $(OBJ_SRC)%.o, $(SRC))
 SRC_LIB = $(wildcard $(SRC_LIB_PATH)*.cpp)
+
+# OBJ FILES
+OBJ = $(patsubst $(SRC_PATH)%.cpp, $(OBJ_SRC)%.o, $(SRC))
 OBJ_LIB = $(patsubst $(SRC_LIB_PATH)%.cpp, $(OBJ_LIB_PATH)%.o, $(SRC_LIB))
+
+# TEST FILES
 TEST = $(wildcard $(TEST_PATH)*.cpp)
 OBJ_TEST = $(patsubst $(TEST_PATH)%.cpp, $(OBJ_TEST_PATH)%.o, $(TEST))
 

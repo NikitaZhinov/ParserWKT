@@ -9,21 +9,21 @@ void Parser::parsing(
                                                    : symbol;
     int col = 0;
 
-    if (command.compare(TRIANGLE) == 0)
+    if (command.compare(TRIANGLE) == 0) // если треугольник
         parsing_triangle(calc, tokens, line, col);
-    else if (command.compare(CIRCLE) == 0)
+    else if (command.compare(CIRCLE) == 0) // если круг
         parsing_circle(calc, tokens, line, col);
-    else if (command.compare(POLYGON) == 0)
+    else if (command.compare(POLYGON) == 0) // если многоугольник
         parsing_polygon(calc, tokens, line, col);
     else
-        print_undefined_command(line, col);
+        print_undefined_command(line, col); // ошибка
 }
 
 void Parser::parsing_triangle(
         Calculate& calc,
         std::vector<std::string>& tokens,
         std::string& line,
-        int& col)
+        int& col) // парсинг треугольника
 {
     std::stack<char> brackets;
     number_object = TRIANGLE_NUMBER;
@@ -34,17 +34,13 @@ void Parser::parsing_triangle(
 
     col += tokens.front().length();
 
-    triangle.points[0].x = 0;
-    triangle.points[0].y = 0;
-    triangle.points[1].x = 0;
-    triangle.points[1].y = 0;
-    triangle.points[2].x = 0;
-    triangle.points[2].y = 0;
+    for (int i = 0; i < 3; i++) // зануление треугольника
+        triangle.points[i] = {0, 0};
 
     for (int i = 1; (size_t)i < tokens.size(); i++) {
         auto token = tokens[i];
 
-        if (point_number > 2)
+        if (point_number > 2) // если точек больше 3-х
             break;
 
         if (token.compare("(") == 0)
@@ -53,7 +49,7 @@ void Parser::parsing_triangle(
             if (brackets.empty())
                 print_extra_parenthesis(line, tokens[0].length());
             brackets.pop();
-        } else if (token.compare(",") == 0) {
+        } else if (token.compare(",") == 0) { // обнуляем параметры точки
             point_number++;
             multiplier = 1;
             axis = 0;
@@ -63,9 +59,9 @@ void Parser::parsing_triangle(
         else if (token.compare(".") == 0) {
             float_part = true;
             multiplier = 1;
-        } else if (is_alphabetic(token))
+        } else if (is_alphabetic(token)) // буква в аргуменах объекта
             print_undefined_symbol(line, col);
-        else if (token.compare(" ") != 0) {
+        else if (token.compare(" ") != 0) { // записываем точку
             if (brackets.empty())
                 print_extra_token(line, col);
 
@@ -99,7 +95,7 @@ void Parser::parsing_circle(
         Calculate& calc,
         std::vector<std::string>& tokens,
         std::string& line,
-        int& col)
+        int& col) // парсинг круга
 {
     std::stack<char> brackets;
     number_object = CIRCLE_NUMBER;
@@ -123,7 +119,7 @@ void Parser::parsing_circle(
             if (brackets.empty())
                 print_extra_parenthesis(line, tokens[0].length());
             brackets.pop();
-        } else if (token.compare(",") == 0) {
+        } else if (token.compare(",") == 0) { // обнуляем параметры точки
             multiplier = 1;
             axis = 0;
             float_part = false;
@@ -133,9 +129,9 @@ void Parser::parsing_circle(
         else if (token.compare(".") == 0) {
             float_part = true;
             multiplier = 1;
-        } else if (is_alphabetic(token))
+        } else if (is_alphabetic(token)) // буква в аргуменах объекта
             print_undefined_symbol(line, col);
-        else if (token.compare(" ") != 0) {
+        else if (token.compare(" ") != 0) { // записываем точку
             if (brackets.empty())
                 print_extra_token(line, col);
 
@@ -171,7 +167,7 @@ void Parser::parsing_polygon(
         Calculate& calc,
         std::vector<std::string>& tokens,
         std::string& line,
-        int& col)
+        int& col) // парсинг полигона
 {
     std::stack<char> brackets;
     number_object = POLYGON_NUMBER;
@@ -193,7 +189,7 @@ void Parser::parsing_polygon(
             if (brackets.empty())
                 print_extra_parenthesis(line, tokens[0].length());
             brackets.pop();
-        } else if (token.compare(",") == 0) {
+        } else if (token.compare(",") == 0) { // обнуляем параметры точки
             multiplier = 1;
             axis = 0;
             float_part = false;
@@ -204,9 +200,9 @@ void Parser::parsing_polygon(
         else if (token.compare(".") == 0) {
             float_part = true;
             multiplier = 1;
-        } else if (is_alphabetic(token))
+        } else if (is_alphabetic(token)) // буква в аргуменах объекта
             print_undefined_symbol(line, col);
-        else if (token.compare(" ") != 0) {
+        else if (token.compare(" ") != 0) { // записываем точку
             if (brackets.empty())
                 print_extra_token(line, col);
 
@@ -236,7 +232,7 @@ void Parser::parsing_polygon(
     calc.add_polygon(line, polygon, number_object);
 }
 
-bool Parser::is_alphabetic(std::string& str)
+bool Parser::is_alphabetic(std::string& str) // проверка на букву
 {
     for (auto& symbol : str)
         if (ALPHABETIC.find(symbol) == std::string::npos)

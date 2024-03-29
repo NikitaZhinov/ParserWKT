@@ -2,16 +2,15 @@
 
 int main(int argc, char const* argv[])
 {
-    int code_err = OK;
     switch (argc) {
     case 1:
         printFileNotFound(); // если не указали файл
         break;
 
     default:
-        geometry(argc, argv);
+        geometry(argc, argv); // вызываем геометрию
         break;
     }
 
-    return code_err;
+    return 0;
 }

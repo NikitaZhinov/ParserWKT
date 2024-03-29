@@ -34,9 +34,9 @@ struct Polygon {
 };
 
 const std::string ALPHABETIC
-        = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";
-const std::string NUMBERS = "0123456789";
-const std::string SPECIAL_SYMBOLS = "(),.- ";
+        = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"; // алфавит
+const std::string NUMBERS = "0123456789";                         // цифры
+const std::string SPECIAL_SYMBOLS = "(),.- "; // спецсимволы
 
 void printFileNotFound(); // вывод ошибки "файл не найден" с завершением
                           // программы
